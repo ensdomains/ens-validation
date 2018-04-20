@@ -1,0 +1,14 @@
+{
+  "name": "safeens",
+  "version": "1.0.0",
+  "description": "Library that scans for mixed alphabets, punycode, and similarity to existing .eth domans in order to warn users of attempts at phishing and/or misleading websites",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "author": "pakaplace",
+  "license": "MIT",
+  "dependencies": {
+    "punycode": "^2.1.0"
+  }
+}
