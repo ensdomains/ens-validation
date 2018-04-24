@@ -1,0 +1,25 @@
+{
+  "name": "ens-validation",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "Matthew Lilley",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "`npm bin`/tsc -p tsconfig.json",
+    "prepublish": "npm run build",
+    "test": "ts-mocha"
+  },
+  "devDependencies": {
+    "@types/expect": "^1.20.3",
+    "@types/mocha": "^5.2.0",
+    "@types/node": "^9.6.6",
+    "@types/xregexp": "^3.0.29",
+    "assert": "^1.4.1",
+    "mocha": "^5.1.1",
+    "punycode": "^2.1.0",
+    "ts-mocha": "^1.2.0",
+    "typescript": "^2.8.3",
+    "xregexp": "^4.1.1"
+  }
+}

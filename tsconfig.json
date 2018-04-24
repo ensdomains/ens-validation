@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": true,
+        "stripInternal": true,
+        "pretty": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ]
+    },
+    "exclude": [
+        "dist",
+        "node_modules",
+        "test"
+    ]
+}
