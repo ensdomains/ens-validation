@@ -1,13 +1,14 @@
 {
   "name": "ens-validation",
   "version": "0.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "unpkg": "dist/index.js",
   "author": "Matthew Lilley",
   "license": "MIT",
   "private": true,
   "scripts": {
     "build": "`npm bin`/tsc -p tsconfig.json",
-    "prepublish": "npm run build",
+    "prepublish": "npm run test && npm run build",
     "test": "ts-mocha"
   },
   "devDependencies": {

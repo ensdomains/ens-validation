@@ -1,6 +1,7 @@
 import { toUnicode } from 'punycode'
 
 import {
+    allowed,
     combiningDiacriticException,
     cyrillic,
     cyrillicLikeLatin,
@@ -8,10 +9,12 @@ import {
     decimalDigitNumber,
     deviation,
     getScripts,
+    inclusion,
     kanaCharacterException,
     latinGreekCyrillicAscii,
     nonAsciiLatin,
-    pureAscii
+    pureAscii,
+    removed
 } from './regexes'
 
 import { Validator as Interface } from './interfaces'
@@ -31,14 +34,19 @@ class UrlFormatter {
 export class Validator implements Interface {
     public validate(string: string): boolean {
         try {
+            const characters = Array.from(string)
+            for(let i = 0; i < characters.length; i++) {
+                if((allowed.test(characters[i]) || inclusion.test(characters[i])) && !removed.test(characters[i])) continue
+                return false
+            }
             // scripts
             const scripts = getScripts(string)
             console.info('scripts', scripts)
             // url
             const urlFormatter = new UrlFormatter(string)
             // // labels
-            // const labels = urlFormatter.labels()
-            // console.info('labels', labels)
+            const labels = urlFormatter.labels()
+            console.info('labels', labels)
             // deviation
             if (deviation.test(string)) {
                 console.info('deviation')
@@ -98,9 +106,10 @@ export class Validator implements Interface {
     //  - Korean: Hangul, Han, Common
     private singleScript(scripts: object): boolean {
         if(Object.keys(scripts).length === 1) return true
-        return scripts['han'] && scripts['bopomofo'] ||
-            scripts['han'] && scripts['hiragana'] && scripts['katakana'] ||
-            scripts['hangul'] && scripts['han']
+        // probably broken
+        return (scripts['han'] && scripts['bopomofo'] || scripts['han'] && scripts['common'] || scripts['bopomofo'] && scripts['common']) ||
+        (scripts['han'] && scripts['hiragana'] || scripts['han'] && scripts['katakana'] || scripts['han'] && scripts['common'] || scripts['hiragana'] && scripts['katakana'] || scripts['hiragana'] && scripts['common'] || scripts['katakana'] && scripts['common']) || 
+        (scripts['han'] && scripts['hangul'] || scripts['han'] && scripts['common'] || scripts['hangul'] && scripts['common'])
     }
     // private lookupMatchInTopDomains(labels: string[]): boolean {
     //       return labels.every(l => {

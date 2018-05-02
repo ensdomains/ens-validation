@@ -25,9 +25,6 @@ const validator = new Validator()
 
 describe('Validator', () => {
     describe('#validate()', () => {
-        context('sadadsadsad', () => {
-            
-        })
         // it('should return true when latin and cjk characters are present', () => {
         //     assert.equal(validator.validate('\u0000'), true);
         // })
@@ -40,14 +37,15 @@ describe('Validator', () => {
         })
         // Han (CJK Ideographs) can be mixed with Bopomofo
         it('should return true when han is mixed with bopomofo', () => {
-            assert.equal(validator.validate('\u4e00\u3040'), true);
+            assert.equal(validator.validate('\u4e00\u311B'), true);
         })
-        // Han can be mixed with Hiragana and Katakana
+        // Han can be mixed with Hiragana
         it('should return true when han is mixed with hiragana', () => {
-            assert.equal(validator.validate('\u4e00\u3040'), true);
+            assert.equal(validator.validate('\u4e00\u3077'), true);
         })
+        // Han can be mixed with Katakana
         it('should return true when han is mixed with katakana', () => {
-            assert.equal(validator.validate('\u4e00\u30a0'), true);
+            assert.equal(validator.validate('\u4e00\u30DB'), true);
         })
         // Han can be mixed with Korean Hangul
         it('should return true when han is mixed with hangul', () => {
@@ -66,11 +64,21 @@ describe('Validator', () => {
         it('should return false when cyrillic characters, which look like latin, are present', () => {
             assert.equal(validator.validate('асԁеһіјӏорԛѕԝхуъЬҽпгѵѡ'), false);
         })
-        it('should return true when ascii numerics are present', () => {
+        it('should return true when single numerics are present', () => {
             assert.equal(validator.validate('123456789'), true);
         })
         it('should return false when mixed numerics are present', () => {
-            assert.equal(validator.validate('123١٢٣'), false);
+            assert.equal(validator.validate('1১'), false);
+            assert.equal(validator.validate('01०१'), false);
+        })
+        it('should return false when label matches dangerous pattern', () => {
+            assert.equal(validator.validate('\u30fb'), false);
+        })
+        it('should return true when single combining mark is present', () => {
+            assert.equal(validator.validate('\u0369'), true);
+        })
+        it('should return false when sequence of combining marks are present', () => {
+            assert.equal(validator.validate('\u0369\u0369\u0369'), false);
         })
     })
 })
