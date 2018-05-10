@@ -45,7 +45,7 @@ function detectScript(character: string): string {
   return s;
 }
 
-function mixedNumerics(validationString: string) {
+function mixedNumerics(validationString: string): boolean {
   const result: string[] = [];
   for (const character of validationString) {
     if (numeric.test(character)) {
