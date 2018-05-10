@@ -18,7 +18,7 @@ import {
 
 import { cyrillic } from './regexes/scripts';
 
-// const blacklist = require('./domains.json');
+const blacklist: string[] = require('./domains.json');
 
 class UrlFormatter {
   public readonly url: string;
@@ -137,13 +137,55 @@ function singleScript(detectedScripts: object): boolean {
 //     }
 // }
 
-// function lookupMatchInTopDomains(labels: string[]): boolean {
-//       return labels.every(l => {
-//           if(found) return true
-//           // todo
-//           return false
-//       })
-// }
+function levenshtein(a: any, b: any) {
+  if (a.length === 0) {
+    return b.length;
+  }
+  if (b.length === 0) {
+    return a.length;
+  }
+
+  // swap to save some memory O(min(a,b)) instead of O(a)
+  if (a.length > b.length) {
+    const tmp = a;
+    a = b;
+    b = tmp;
+  }
+
+  const row = [];
+  // init the row
+  for (let i = 0; i <= a.length; i++) {
+    row[i] = i;
+  }
+
+  // fill in the rest
+  for (let i = 1; i <= b.length; i++) {
+    let prev = i;
+    for (let j = 1; j <= a.length; j++) {
+      let val;
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        val = row[j - 1]; // match
+      } else {
+        val = Math.min(
+          row[j - 1] + 1, // substitution
+          prev + 1, // insertion
+          row[j] + 1,
+        ); // deletion
+      }
+      row[j - 1] = prev;
+      prev = val;
+    }
+    row[a.length] = prev;
+  }
+
+  return row[a.length];
+}
+
+function similarToTopDomains(url: string): boolean {
+  return blacklist.some(b => {
+    return levenshtein(url, b) < 5;
+  });
+}
 
 function inAllowedSets(validationString: string) {
   return Array.from(validationString).every(
@@ -160,14 +202,19 @@ function sequenceOfCombiningMarks(validationString: string): boolean {
   });
 }
 
+function doesNotPassInitialChecks(validationString: string): boolean {
+  return (
+    !inAllowedSets(validationString) ||
+    mixedNumerics(validationString) ||
+    sequenceOfCombiningMarks(validationString) ||
+    similarToTopDomains(validationString)
+  );
+}
+
 export function validate(validationString: string): boolean {
   try {
-    if (
-      // blacklist.indexOf(validationString) > -1 ||
-      !inAllowedSets(validationString) ||
-      mixedNumerics(validationString) ||
-      sequenceOfCombiningMarks(validationString)
-    ) {
+    // validationString = punycode.toUnicode(validationString)
+    if (doesNotPassInitialChecks(validationString)) {
       return false;
     }
     // scripts

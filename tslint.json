@@ -21,7 +21,7 @@
       "no-reference": true,
       "unified-signatures": true,
       "await-promise": true,
-      "cyclomatic-complexity": [true, 15],
+      "cyclomatic-complexity": [true, 11],
       "prefer-const": true,
       "no-boolean-literal-compare": true,
       "no-unnecessary-callback-wrapper": true,

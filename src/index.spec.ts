@@ -26,7 +26,7 @@ describe('test', () => {
     expect(validate('\u00df\u03c2\u200c\u200d')).toEqual(false);
   });
   it('should return true when input is ascii', () => {
-    expect(validate('ethereum.eth')).toEqual(true);
+    expect(validate('asciihost.eth')).toEqual(true);
   });
   // Latin, Cyrillic or Greek characters cannot be mixed with each other
   it('should return false when mixed scripts are present', () => {
@@ -58,5 +58,9 @@ describe('test', () => {
   });
   it('should return true when a single kana combining mark is present', () => {
     expect(validate('\u3099')).toEqual(true);
+  });
+  it('should return false when similar to EAL list is present', () => {
+    expect(validate('myethervvallet')).toEqual(false);
+    expect(validate('cryptocompaare')).toEqual(false);
   });
 });
