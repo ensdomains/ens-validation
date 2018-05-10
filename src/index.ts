@@ -151,17 +151,13 @@ function inAllowedSets(validationString: string) {
   );
 }
 
-function sequenceOfCombiningMarks(validationString: string) {
-  const characters: string[] = Array.from(validationString);
-  for (let i = 0; i < characters.length; i++) {
-    if (
-      nonSpacingMark.test(characters[i]) &&
-      nonSpacingMark.test(characters[i + 1])
-    ) {
-      return true;
-    }
-    continue;
-  }
+function sequenceOfCombiningMarks(validationString: string): boolean {
+  return Array.from(validationString).some((character, index) => {
+    return (
+      nonSpacingMark.test(character) &&
+      nonSpacingMark.test(validationString[index + 1])
+    );
+  });
 }
 
 export function validate(validationString: string): boolean {
