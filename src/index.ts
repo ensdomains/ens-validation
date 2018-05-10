@@ -9,12 +9,16 @@ import {
   kanaCharacterException,
   latinGreekCyrillicAscii,
   nonAsciiLatin,
+  nonSpacingMark,
+  numeric,
   pureAscii,
   removed,
   scripts,
 } from './regexes';
 
 import { cyrillic } from './regexes/scripts';
+
+// const blacklist = require('./domains.json');
 
 class UrlFormatter {
   public readonly url: string;
@@ -30,7 +34,31 @@ class UrlFormatter {
   }
 }
 
-export function detectScripts(validationString: string): object {
+function detectScript(character: string): string {
+  let s = '';
+  for (const [scriptName, script] of Object.entries(scripts)) {
+    if (script.test(character)) {
+      s = scriptName;
+      break;
+    }
+  }
+  return s;
+}
+
+function mixedNumerics(validationString: string) {
+  const result: string[] = [];
+  for (const character of validationString) {
+    if (numeric.test(character)) {
+      const script: string = detectScript(character);
+      if (!result.includes(script)) {
+        result.push(script);
+      }
+    }
+  }
+  return result.length > 1;
+}
+
+function detectScripts(validationString: string): object {
   return Object.entries(scripts)
     .filter(script => {
       return script[1].test(validationString);
@@ -93,6 +121,22 @@ function singleScript(detectedScripts: object): boolean {
   );
 }
 
+// //Only do Levenshtein if it's not blacklisted
+// //Levenshtein - @sogoiii
+// var blHolisticStatus = false;
+// if(isBlacklisted === false && arrWhitelistedDomains.indexOf(strCurrentTab) < 0) {
+//     var strCurrentTab = punycode.toUnicode(strCurrentTab);
+//     var source = strCurrentTab.replace(/\./g, '');
+//     var intHolisticMetric = levenshtein(source, 'myetherwallet');
+//     var intHolisticLimit = 5; // How different can the word be?
+//     blHolisticStatus = (intHolisticMetric > 0 && intHolisticMetric < intHolisticLimit) ? true : false;
+//     if(blHolisticStatus === false) {
+//         //Do edit distance against mycrypto
+//         var intHolisticMetric = levenshtein(source, 'mycrypto');
+//         blHolisticStatus = (intHolisticMetric > 0 && intHolisticMetric < 3) ? true : false;
+//     }
+// }
+
 // function lookupMatchInTopDomains(labels: string[]): boolean {
 //       return labels.every(l => {
 //           if(found) return true
@@ -107,9 +151,27 @@ function inAllowedSets(validationString: string) {
   );
 }
 
+function sequenceOfCombiningMarks(validationString: string) {
+  const characters: string[] = Array.from(validationString);
+  for (let i = 0; i < characters.length; i++) {
+    if (
+      nonSpacingMark.test(characters[i]) &&
+      nonSpacingMark.test(characters[i + 1])
+    ) {
+      return true;
+    }
+    continue;
+  }
+}
+
 export function validate(validationString: string): boolean {
   try {
-    if (!inAllowedSets(validationString)) {
+    if (
+      // blacklist.indexOf(validationString) > -1 ||
+      !inAllowedSets(validationString) ||
+      mixedNumerics(validationString) ||
+      sequenceOfCombiningMarks(validationString)
+    ) {
       return false;
     }
     // scripts

@@ -48,9 +48,15 @@ describe('test', () => {
     expect(validate('\u0369')).toEqual(true);
   });
   it('should return false when sequence of combining marks are present', () => {
-    expect(validate('\u0369\u0369\u0369')).toEqual(false);
+    expect(validate('\u0369\u0369')).toEqual(false);
   });
-  it('shoud return false', () => {
-    expect(validate('googlé.com')).toEqual(false);
+  it('should return false when sequence of kana combining marks are present', () => {
+    expect(validate('\u3099\u3099')).toEqual(false);
+  });
+  it('should return true when a single combining mark is present', () => {
+    expect(validate('\u0369')).toEqual(true);
+  });
+  it('should return true when a single kana combining mark is present', () => {
+    expect(validate('\u3099')).toEqual(true);
   });
 });

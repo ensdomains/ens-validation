@@ -36,6 +36,7 @@ export const dangerous = [
 // for(let i = 0; i < dangerous.length; i++) console.log('dangerous' + i, new RegExp(dangerous[i]).test('abc'))
 
 export const nonSpacingMark = X('\\p{Non_Spacing_Mark}');
+export const numeric = X('\\p{Number}');
 export const decimalDigitNumber = X('\\p{Nd}');
 
 export const allowed = X(
