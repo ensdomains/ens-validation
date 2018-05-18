@@ -1,4 +1,5 @@
 import { validate } from './index';
+
 describe('test', () => {
   it('should return false when u0338 is present', () => {
     expect(validate('\u0338')).toEqual(false);
@@ -26,17 +27,28 @@ describe('test', () => {
     expect(validate('\u00df\u03c2\u200c\u200d')).toEqual(false);
   });
   it('should return true when input is ascii', () => {
-    expect(validate('asciihost.eth')).toEqual(true);
+    expect(validate('ascii.eth')).toEqual(true);
   });
   // Latin, Cyrillic or Greek characters cannot be mixed with each other
   it('should return false when mixed scripts are present', () => {
-    expect(validate('\u0000\u0100\u0370\u04009\u0300')).toEqual(false);
+    // latin
+    expect(validate('latin')).toEqual(true);
+    // latin and cyrillic
+    expect(validate('latin\u0409')).toEqual(false);
+    // latin and greek
+    expect(validate('latin\u0370')).toEqual(false);
+    // greek
+    expect(validate('\u0370')).toEqual(true);
+    // greek and cyrillic
+    expect(validate('\u0370\u0409')).toEqual(false);
+    // cyrillic
+    expect(validate('\u0409')).toEqual(true);
   });
   it('should return false when cyrillic characters, which look like latin, are present', () => {
     expect(validate('асԁеһіјӏорԛѕԝхуъЬҽпгѵѡ')).toEqual(false);
   });
   it('should return true when single numerics are present', () => {
-    expect(validate('123456789')).toEqual(true);
+    expect(validate('4354534534543534')).toEqual(true);
   });
   it('should return false when mixed numerics are present', () => {
     expect(validate('1১')).toEqual(false);
@@ -44,20 +56,11 @@ describe('test', () => {
   it('should return false when label matches dangerous pattern', () => {
     expect(validate('\u30fb')).toEqual(false);
   });
-  it('should return true when single combining mark is present', () => {
-    expect(validate('\u0369')).toEqual(true);
-  });
   it('should return false when sequence of combining marks are present', () => {
-    expect(validate('\u0369\u0369')).toEqual(false);
+    expect(validate('\u0369\u0369\u0369')).toEqual(false);
   });
   it('should return false when sequence of kana combining marks are present', () => {
-    expect(validate('\u3099\u3099')).toEqual(false);
-  });
-  it('should return true when a single combining mark is present', () => {
-    expect(validate('\u0369')).toEqual(true);
-  });
-  it('should return true when a single kana combining mark is present', () => {
-    expect(validate('\u3099')).toEqual(true);
+    expect(validate('\u3099\u3099\u3099')).toEqual(false);
   });
   it('should return false when similar to EAL list is present', () => {
     expect(validate('myethervvallet')).toEqual(false);

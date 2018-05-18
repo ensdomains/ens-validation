@@ -1,5 +1,4 @@
 import {
-  ascii,
   combiningDiacriticException,
   cyrillicLikeLatin,
   deviation,
@@ -8,14 +7,9 @@ import {
   nonAsciiLatin,
 } from './index';
 
-import { cyrillic, greek } from './scripts';
+import { cyrillic, greek } from './unicode/scripts';
 
 describe('regexes', () => {
-  describe('ascii', () => {
-    it('should return true when ascii is present', () => {
-      expect(ascii.test('asciii')).toEqual(true);
-    });
-  });
   describe('deviation', () => {
     it('should return true when deviation characters are present', () => {
       expect(deviation.test('\u00df')).toEqual(true);

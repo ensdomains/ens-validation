@@ -1,4 +1,3 @@
-// https://www.regular-expressions.info/unicode.html
 import X from 'xregexp';
 
 export const common = X('\\p{Common}');
