@@ -46,6 +46,7 @@
   ],
   "homepage": "https://github.com/MyCryptoHQ/ens-validation#readme",
   "devDependencies": {
+    "@rollup/plugin-strip": "2.0.1",
     "@types/expect": "^1.20.3",
     "@types/jest": "^22.2.3",
     "@types/lodash": "^4.14.108",
