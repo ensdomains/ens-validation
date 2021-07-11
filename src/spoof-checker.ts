@@ -1,6 +1,4 @@
-import { levenshtein } from './algorithms/strings';
 import { CheckResult } from './check-result';
-import * as blacklist from './domains.json';
 import { ErrorCode, RestrictionLevel, SpoofChecks } from './enums';
 import {
   allowed,
@@ -25,15 +23,6 @@ export interface SpoofCheckerContract {
   // library failure, all IDN inputs will be treated as unsafe.
   // See the function body for details on the specific safety checks performed.
   safeToDisplayAsUnicode(label: string, isTldAscii: boolean): boolean;
-  // Returns true if |hostname| or the last few components of |hostname| looks
-  // similar to one of top domains listed in top_domains/alexa_domains.list. Two
-  // checks are done:
-  //   1. Calculate the skeleton of |hostname| based on the Unicode confusable
-  //   character list and look it up in the pre-calculated skeleton list of
-  //   top domains.
-  //   2. Look up the diacritic-free version of |hostname| in the list of
-  //   top domains. Note that non-IDN hostnames will not get here.
-  similarToTopDomains(hostname: string): boolean;
 }
 
 export class SpoofChecker implements SpoofCheckerContract {
@@ -41,11 +30,12 @@ export class SpoofChecker implements SpoofCheckerContract {
   public checks: SpoofChecks = SpoofChecks.ALL_CHECKS;
   public restrictionLevel: RestrictionLevel = RestrictionLevel.HIGHLY_RESTRICTIVE;
   public safeToDisplayAsUnicode(label: string, isTldAscii: boolean) {
-    console.log('safeToDisplayAsUnicode', label);
+    //console.log('safeToDisplayAsUnicode', label);
     this.status = ErrorCode.ZERO_ERROR;
     let result = this.check(label);
+    console.log('result:', result.toString(2));
     if (this.status > ErrorCode.ZERO_ERROR || result & SpoofChecks.ALL_CHECKS) {
-      console.log('Spoof check failuire');
+      //console.log('Spoof check failuire');
       return false;
     }
     result &= RestrictionLevel.RESTRICTION_LEVEL_MASK;
@@ -77,11 +67,6 @@ export class SpoofChecker implements SpoofCheckerContract {
     console.log('dangerous patterns');
     return !dangerousPatterns.some(d => d.test(label));
   }
-  public similarToTopDomains(url: string): boolean {
-    return Object.entries(blacklist).some(b => {
-      return levenshtein(url, b[1]) < 5;
-    });
-  }
   private check(input: string) {
     let result: number = 0;
     const checkResult = new CheckResult();
@@ -91,7 +76,7 @@ export class SpoofChecker implements SpoofCheckerContract {
         result |= SpoofChecks.RESTRICTION_LEVEL;
       }
       checkResult.restrictionLevel = restrictionLevel;
-      console.log('SpoofChecks.RESTRICTION_LEVEL result ', result);
+      console.log('SpoofChecks.RESTRICTION_LEVEL result ', result.toString(2));
     }
     if (0 !== (this.checks & SpoofChecks.MIXED_NUMBERS)) {
       // console.log('MIXED_NUMBERS', result)
@@ -100,7 +85,7 @@ export class SpoofChecker implements SpoofCheckerContract {
         result |= SpoofChecks.MIXED_NUMBERS;
       }
       checkResult.numerics = numerics;
-      console.log('MIXED_NUMBERS result ', result);
+      console.log('MIXED_NUMBERS result ', result.toString(2));
     }
     if (0 !== (this.checks & SpoofChecks.CHAR_LIMIT)) {
       // console.log('CHAR_LIMIT', result);
@@ -111,7 +96,7 @@ export class SpoofChecker implements SpoofCheckerContract {
           break;
         }
       }
-      console.log('CHAR_LIMIT result ', result);
+      console.log('CHAR_LIMIT result ', result.toString(2));
     }
 
     if (0 !== (this.checks & SpoofChecks.INVISIBLE)) {
