@@ -1,8 +1,8 @@
 {
-  "name": "ens-validation",
+  "name": "@ensdomains/ens-validation",
   "version": "0.0.0",
   "description": "",
-  "private": true,
+  "private": false,
   "main": "dist/ens-validation.umd.js",
   "module": "dist/ens-validation.es6.js",
   "typings": "src/index",
@@ -20,7 +20,7 @@
     "lint:fix": "tslint --project . --fix",
     "prebuild": "rimraf dist",
     "build": "tsc -p ./tsconfig-build.json --module commonjs && rollup -c rollup.config.ts",
-    "prepublishOnly": "rimraf node_modules && npm i && npm run tsc && npm run test:prepublish && npm run build",
+    "prepublishOnly": "rimraf node_modules && npm i && npm run tsc && npm run build",
     "precommit": "lint-staged",
     "report-coverage": " cat ./coverage/lcov.info | coveralls",
     "prepush": "npm run lint && npm run tsc"
@@ -46,6 +46,7 @@
   ],
   "homepage": "https://github.com/MyCryptoHQ/ens-validation#readme",
   "devDependencies": {
+    "@rollup/plugin-strip": "2.0.1",
     "@types/expect": "^1.20.3",
     "@types/jest": "^22.2.3",
     "@types/lodash": "^4.14.108",

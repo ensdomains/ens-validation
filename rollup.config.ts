@@ -5,6 +5,7 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import globals from 'rollup-plugin-node-globals';
 import builtins from 'rollup-plugin-node-builtins';
 import json from 'rollup-plugin-json';
+import strip from '@rollup/plugin-strip';
 
 const pkg = require('./package.json');
 
@@ -64,5 +65,8 @@ export default {
     }),
     // Resolve source maps to the original source
     sourceMaps(),
+    strip({
+      include: ['**/*.ts']
+    })
   ],
 };

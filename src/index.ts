@@ -7,11 +7,9 @@ export function validate(input: string): boolean {
     const domain: Domain = new Domain(input);
     const checker: SpoofChecker = new SpoofChecker();
     console.log('Labels: ', domain.labels);
-    return (
-      domain.labels.every(label =>
-        checker.safeToDisplayAsUnicode(label, domain.isTldAscii),
-      ) && !checker.similarToTopDomains(domain.hostname)
-    );
+    return domain.labels.every(label => {
+      return checker.safeToDisplayAsUnicode(label, domain.isTldAscii);
+    });
   } catch (e) {
     console.log(e.message);
     return false;
