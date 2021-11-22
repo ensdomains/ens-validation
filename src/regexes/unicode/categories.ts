@@ -1,3 +1,4 @@
+import emojiRegex from 'emoji-regex';
 import X from 'xregexp';
 
 export const letter = X('\\p{Letter}'); // any kind of letter from any language.
@@ -41,3 +42,4 @@ export const format = X('\\p{Format}'); // invisible formatting indicator.
 export const privateUse = X('\\p{Private_Use}'); // any code point reserved for private use.
 export const surrogate = X('\\p{Surrogate}'); // one half of a surrogate pair in UTF-16 encoding.
 export const unassigned = X('\\p{Unassigned}'); // any code point to which no character has been assigned.
+export const emoji = X(emojiRegex());

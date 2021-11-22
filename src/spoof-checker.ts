@@ -14,6 +14,7 @@ import {
 import { scripts } from './regexes/unicode';
 import {
   decimalDigitNumber,
+  emoji,
   nonSpacingMark,
 } from './regexes/unicode/categories';
 import { ScriptResolver } from './script-resolver';
@@ -28,18 +29,21 @@ export interface SpoofCheckerContract {
 export class SpoofChecker implements SpoofCheckerContract {
   public status: ErrorCode = ErrorCode.ZERO_ERROR;
   public checks: SpoofChecks = SpoofChecks.ALL_CHECKS;
-  public restrictionLevel: RestrictionLevel = RestrictionLevel.HIGHLY_RESTRICTIVE;
+  public restrictionLevel: RestrictionLevel =
+    RestrictionLevel.HIGHLY_RESTRICTIVE;
   public safeToDisplayAsUnicode(label: string, isTldAscii: boolean) {
-    //console.log('safeToDisplayAsUnicode', label);
     this.status = ErrorCode.ZERO_ERROR;
+
+    // mask all emojis with a regular letter for the rest of the validation
+    label = label.replace(emoji, 'a');
+
     let result = this.check(label);
-    console.log('result:', result.toString(2));
     if (this.status > ErrorCode.ZERO_ERROR || result & SpoofChecks.ALL_CHECKS) {
       //console.log('Spoof check failuire');
       return false;
     }
     result &= RestrictionLevel.RESTRICTION_LEVEL_MASK;
-    console.log('result', result);
+    console.info('spoof check result', result);
     // deviation
     if (deviation.test(label)) {
       console.info('deviation');
