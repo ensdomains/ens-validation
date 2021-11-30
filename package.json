@@ -1,6 +1,6 @@
 {
   "name": "@ensdomains/ens-validation",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "private": false,
   "main": "dist/ens-validation.umd.js",

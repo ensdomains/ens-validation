@@ -10,7 +10,7 @@ export function validate(input: string): boolean {
       return checker.safeToDisplayAsUnicode(label, domain.isTldAscii);
     });
   } catch (e) {
-    console.log(e.message);
+    console.log((e as Error).message);
     return false;
   }
 }
