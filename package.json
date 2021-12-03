@@ -1,6 +1,6 @@
 {
   "name": "@ensdomains/ens-validation",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "private": false,
   "main": "dist/ens-validation.umd.js",
@@ -53,6 +53,7 @@
     "@types/node": "^10.1.4",
     "@types/utf8": "^2.1.6",
     "@types/xregexp": "^3.0.29",
+    "emoji-regex": "^10.0.0",
     "husky": "^0.14.3",
     "jest": "^22.4.3",
     "lint-staged": "^7.0.5",
@@ -71,7 +72,7 @@
     "ts-jest": "^22.4.4",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.12.0",
-    "typescript": "^2.8.3",
+    "typescript": "^3.8.3",
     "utf8": "^3.0.0",
     "xregexp": "^4.1.1"
   },
@@ -83,6 +84,7 @@
       "ts",
       "tsx"
     ],
+    "testURL": "http://localhost/",
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },

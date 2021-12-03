@@ -10,7 +10,8 @@ interface CheckResultContract {
 export class CheckResult implements CheckResultContract {
   public checks: SpoofChecks = SpoofChecks.ALL_CHECKS;
   public numerics: string[] = [];
-  public restrictionLevel: RestrictionLevel = RestrictionLevel.HIGHLY_RESTRICTIVE;
+  public restrictionLevel: RestrictionLevel =
+    RestrictionLevel.HIGHLY_RESTRICTIVE;
   public toCombinedBitmask(
     enabledChecks: number,
   ): SpoofChecks | RestrictionLevel {
